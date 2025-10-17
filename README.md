@@ -63,6 +63,6 @@ Envie um pull request com uma descrição clara das mudanças propostas.
 ## Licença
 Este projeto está licenciado sob a MIT License. Consulte o arquivo LICENSE para mais detalhes.
 <br>
-##C ontato
+## Contato
 <br>
 Para dúvidas ou sugestões, entre em contato com a equipe via issues no GitHub ou diretamente com os membros listados.
