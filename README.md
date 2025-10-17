@@ -12,7 +12,7 @@ Este repositório foi criado para armazenar o trabalho e o conhecimento constru�
 <br>
 O projeto RP2_2025 realiza uma análise quantitativa e descritiva de datasets públicos, originados de pesquisas censitárias e de cunho epidemiológico, com foco em dois cenários críticos do estado de São Paulo, SP:
 
--Saneamento Básico em São Paulo, SP  
+- Saneamento Básico em São Paulo, SP  
 
 Exploração de dados públicos relacionados à infraestrutura de saneamento, como acesso à água potável, tratamento de esgoto e gestão de resíduos.  
 **Objetivo**: Identificar padrões, desigualdades regionais e possíveis correlações com indicadores socioeconômicos, visando propor insights para políticas públicas.
