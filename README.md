@@ -59,10 +59,10 @@ Contribuições são bem-vindas! Se você deseja colaborar, por favor:
 Crie uma branch para sua feature (git checkout -b feature/nova-analise).
 <br>
 Envie um pull request com uma descrição clara das mudanças propostas.
+<br>
 
 ## Licença
 Este projeto está licenciado sob a MIT License. Consulte o arquivo LICENSE para mais detalhes.
 <br>
 ## Contato
-<br>
 Para dúvidas ou sugestões, entre em contato com a equipe via issues no GitHub ou diretamente com os membros listados.
