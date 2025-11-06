@@ -37,6 +37,4 @@ os.makedirs(output_folder, exist_ok=True)
 output_file = os.path.join(output_folder, 'dicionario_filtrado.csv')
 df_dictionary_final.to_csv(output_file, index=False)
 
-print(f"Dicionário filtrado e processado salvo em: {output_file}")
-
 #---------------------------------
