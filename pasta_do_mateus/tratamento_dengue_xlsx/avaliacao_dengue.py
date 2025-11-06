@@ -64,5 +64,5 @@ plt.ylabel('Frequência')
 plt.show()
 
 # Exportar para CSV
-df.to_csv('dengue2022_limpo.csv', index=False)
-print('Arquivo salvo como dengue2022_limpo.csv')
+df.to_csv('dataset_dengue.csv', index=False)
+print('Arquivo salvo como dataset_dengue.csv')

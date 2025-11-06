@@ -28,7 +28,7 @@ print("\nInformações do dataset final:")
 print(final_df.info())
 
 # (Opcional) Salvar o dataset combinado
-final_df.to_csv('dataset_combinado.csv', index=False)
+final_df.to_csv('dataset_saneamento.csv', index=False)
 # ================================
 # Eliminação de algumas variáveis: as que tratam do gênero dos ocupantes do domicílio, algo que não será investigado
 # Definindo os intervalos de início e fim
@@ -58,7 +58,7 @@ cols_to_drop = [ f'V{i:05d}' for (start, end) in intervalos for i in range(start
 final_df = final_df.drop(columns=cols_to_drop)
 
 # (Opcional) Salvar o dataset processado e verificar novamente as informações do dataset
-final_df.to_csv('dataset_combinado.csv', index=False)
+final_df.to_csv('dataset_saneamento.csv', index=False)
 
 print("\nInformações do dataset final:")
 print(final_df.info())
