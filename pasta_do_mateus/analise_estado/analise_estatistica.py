@@ -4,7 +4,9 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
 # Caminho do arquivo original
-caminho = "dataset_dengue_incidencia.csv"
+caminho = "dataset_dengue_saneamento.csv"
+
+#--------------------------------
 
 # Leitura do dataset
 df = pd.read_csv(caminho)
@@ -13,14 +15,9 @@ df = pd.read_csv(caminho)
 df["Taxa_incidência_mil"] = ((df["Total_confirmados_anual"] / df["População_total_2021"]) * 10000).round()
 
 # Salvando o novo dataset com a nova coluna
-df.to_csv("dataset_dengue_incidencia.csv", index=False)
+df.to_csv("dataset_dengue_saneamento.csv", index=False)
 
 #--------------------------------
-
-caminho = "dataset_dengue_incidencia.csv"
-
-# Leitura do dataset
-df = pd.read_csv(caminho)
 
 # Função para classificar a taxa de incidência
 def classificar_incidencia(valor):
@@ -35,36 +32,46 @@ def classificar_incidencia(valor):
 df["Classificação_incidência"] = df["Taxa_incidência_mil"].apply(classificar_incidencia)
 
 # Salvar o novo dataset com a coluna de classificação
-df.to_csv("dataset_dengue_incidencia.csv", index=False)
+df.to_csv("dataset_dengue_saneamento.csv", index=False)
 
 #--------------------------------
-# Caminho do arquivo
-caminho1 = "dataset_saneamento_estado.csv"
-caminho2 = "normalizado_saneamento.csv"
-
-# Leitura do dataset
-df1 = pd.read_csv(caminho1)
-df2 = pd.read_csv(caminho2)
 
 # Ignorando as duas primeiras colunas
-df1_dados = df1.iloc[:, 2:]
-df2_dados = df2.iloc[:, 2:]
+df_dados = df.iloc[:, 7:]
 
 # Escolha do número de clusters (você pode ajustar)
 k = 12
 
 # Aplicando o K-Means
 kmeans = KMeans(n_clusters=k, random_state=42)
-df1["Cluster"] = kmeans.fit_predict(df1_dados)
-df2["Cluster"] = kmeans.fit_predict(df2_dados)
+df["Cluster"] = kmeans.fit_predict(df_dados)
 
 
 print("\nDistribuição de municípios por cluster:")
-print(df1["Cluster"].value_counts())
-
-print("\nDistribuição de municípios por cluster:")
-print(df2["Cluster"].value_counts())
+print(df["Cluster"].value_counts().sort_index())
 
 # Salvando o dataset com os clusters
-df1.to_csv("dataset_saneamento_estado.csv", index=False)
-df2.to_csv("normalizado_saneamento.csv", index=False)
+df.to_csv("dataset_dengue_saneamento.csv", index=False)
+
+#--------------------------------
+
+# Criar a tabela cruzada com totais
+tabela = pd.crosstab(
+    df["Cluster"],
+    df["Classificação_incidência"],
+    margins=True,
+    margins_name="Total"
+)
+
+# Ordenar as linhas (exceto "Total") pelo total em ordem crescente
+tabela_ordenada = (
+    tabela[tabela.index != "Total"]       
+    .sort_values(by="Total", ascending=True)
+)
+
+# Exibir o resultado
+print("\nDistribuição de classificações de incidência por cluster (ordenada por total crescente):")
+print(tabela_ordenada)
+
+#--------------------------------
+
