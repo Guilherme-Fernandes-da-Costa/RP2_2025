@@ -1,77 +1,83 @@
 import pandas as pd
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
+import seaborn as sns
+import os
 
-# Caminho do arquivo original
+# Caminho do dataset
 caminho = "dataset_dengue_saneamento.csv"
 
-#--------------------------------
-
-# Leitura do dataset
+# Ler dataset
 df = pd.read_csv(caminho)
 
-# Cálculo da taxa de incidência por 100.000 habitantes
-df["Taxa_incidência_mil"] = ((df["Total_confirmados_anual"] / df["População_total_2021"]) * 10000).round()
+# Nome da variável alvo
+alvo = "Taxa_de_incidência"
 
-# Salvando o novo dataset com a nova coluna
-df.to_csv("dataset_dengue_saneamento.csv", index=False)
+# Garantir que a coluna alvo é numérica
+df[alvo] = pd.to_numeric(df[alvo], errors="coerce")
 
-#--------------------------------
+# Selecionar variáveis que começam com V
+variaveis_v = [col for col in df.columns if col.startswith("V")]
 
-# Função para classificar a taxa de incidência
-def classificar_incidencia(valor):
-    if valor < 100:
-        return "Baixa"
-    elif valor <= 300:
-        return "Média"
-    else:
-        return "Alta"
+# Calcular correlação com Taxa de Incidência
+resultados = {}
 
-# Aplicar a função à coluna de taxa
-df["Classificação_incidência"] = df["Taxa_incidência_mil"].apply(classificar_incidencia)
+for col in variaveis_v:
+    df[col] = pd.to_numeric(df[col], errors="coerce")
+    corr = df[[alvo, col]].corr().iloc[0, 1]
+    resultados[col] = corr
 
-# Salvar o novo dataset com a coluna de classificação
-df.to_csv("dataset_dengue_saneamento.csv", index=False)
+# Transformar em DataFrame
+corr_df = pd.DataFrame.from_dict(resultados, orient="index", columns=["Correlação"])
+corr_df = corr_df.sort_values(by="Correlação", ascending=False)
 
-#--------------------------------
+print("\nCorrelação linear entre Taxa de Incidência e variáveis Vxxxx:")
+print(corr_df)
 
-# Ignorando as duas primeiras colunas
-df_dados = df.iloc[:, 7:]
+# Salvar CSV
+corr_df.to_csv("correlacao_taxa_vs_variaveis_V.csv")
+print("\nArquivo salvo: correlacao_taxa_vs_variaveis_V.csv")
 
-# Escolha do número de clusters (você pode ajustar)
-k = 12
+# --------------------------------------------------------
+# OPÇÃO 1 — GRÁFICO DE BARRAS
+# --------------------------------------------------------
+plt.figure(figsize=(10, 8))
+corr_df["Correlação"].plot(kind="bar", color="steelblue")
+plt.title("Correlação entre Variáveis Vxxxx e Taxa de Incidência")
+plt.xlabel("Variáveis")
+plt.ylabel("Correlação de Pearson")
+plt.xticks(rotation=90)
+plt.grid(axis="y", linestyle="--", alpha=0.5)
+plt.tight_layout()
+plt.savefig("grafico_barras_correlacao.png", dpi=300)
+plt.close()
 
-# Aplicando o K-Means
-kmeans = KMeans(n_clusters=k, random_state=42)
-df["Cluster"] = kmeans.fit_predict(df_dados)
+# --------------------------------------------------------
+# OPÇÃO 2 — HEATMAP DAS CORRELAÇÕES
+# --------------------------------------------------------
+plt.figure(figsize=(6, 10))
+sns.heatmap(corr_df, annot=True, cmap="coolwarm", vmin=-1, vmax=1, linewidths=.5)
+plt.title("Heatmap da Correlação com Taxa de Incidência")
+plt.tight_layout()
+plt.savefig("heatmap_correlacao.png", dpi=300)
+plt.close()
 
+#---------------------------------------------------------
 
-print("\nDistribuição de municípios por cluster:")
-print(df["Cluster"].value_counts().sort_index())
+# Criar pasta para salvar os gráficos (opcional)
+os.makedirs("scatter_plots", exist_ok=True)
 
-# Salvando o dataset com os clusters
-df.to_csv("dataset_dengue_saneamento.csv", index=False)
+# Gerar um gráfico de dispersão para cada variável Vxxxx
+for col in variaveis_v:
+    plt.figure(figsize=(7, 5))
+    plt.scatter(df[col], df[alvo], alpha=0.6)
+    
+    plt.title(f"Dispersão entre {col} e {alvo}")
+    plt.xlabel(col)
+    plt.ylabel(alvo)
+    plt.grid(True, linestyle="--", alpha=0.4)
+    
+    # Salvar arquivo
+    plt.savefig(f"scatter_plots/scatter_{col}.png", dpi=300)
+    plt.close()
 
-#--------------------------------
-
-# Criar a tabela cruzada com totais
-tabela = pd.crosstab(
-    df["Cluster"],
-    df["Classificação_incidência"],
-    margins=True,
-    margins_name="Total"
-)
-
-# Ordenar as linhas (exceto "Total") pelo total em ordem crescente
-tabela_ordenada = (
-    tabela[tabela.index != "Total"]       
-    .sort_values(by="Total", ascending=True)
-)
-
-# Exibir o resultado
-print("\nDistribuição de classificações de incidência por cluster (ordenada por total crescente):")
-print(tabela_ordenada)
-
-#--------------------------------
-
+#---------------------------------------------------------
