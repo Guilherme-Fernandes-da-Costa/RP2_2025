@@ -7,8 +7,8 @@ import numpy as np
 POR_X_HABITANTES = 100000
 
 # Caminho do arquivo original
-#caminho = "dataset_dengue_saneamento.csv"; titulo = "padrao"
-caminho = "dataset_normalizado.csv"; titulo = "normalizado"
+caminho = "dataset_dengue_saneamento.csv"; titulo = "padrao"
+#caminho = "dataset_normalizado.csv"; titulo = "normalizado"
 
 # Leitura do dataset
 df = pd.read_csv(caminho)
@@ -19,7 +19,7 @@ df = pd.read_csv(caminho)
 df_dados = df.iloc[:, 7:]
 
 # Escolha do número de clusters (você pode ajustar)
-k = 12
+k = 10
 
 # Aplicando o K-Means
 kmeans = KMeans(n_clusters=k, random_state=42)
@@ -119,7 +119,7 @@ plt.grid(True)
 plt.legend(*scatter.legend_elements(), title="Cluster")
 
 # Salvando imagem
-plt.savefig(f"clusters_pca_visualizacao_{titulo}.png", dpi=300)
+plt.savefig(f"img_clusters_pca_visualizacao_{titulo}.png", dpi=300)
 plt.close()
 
 #--------------------------------
@@ -163,5 +163,5 @@ plt.legend(title="Classificação")
 plt.grid(axis="y", linestyle="--", alpha=0.4)
 
 # Salvar em arquivo
-plt.savefig(f"barras_incidencia_por_cluster_{titulo}.png", dpi=300)
+plt.savefig(f"img_barras_incidencia_por_cluster_{titulo}.png", dpi=300)
 plt.close()

@@ -4,7 +4,8 @@ import seaborn as sns
 import os
 
 # Caminho do dataset
-caminho = "dataset_dengue_saneamento.csv"
+#caminho = "dataset_dengue_saneamento.csv"; titulo = "padrao"
+caminho = "dataset_normalizado.csv"; titulo = "normalizado"
 
 # Ler dataset
 df = pd.read_csv(caminho)
@@ -34,8 +35,7 @@ print("\nCorrelação linear entre Taxa de Incidência e variáveis Vxxxx:")
 print(corr_df)
 
 # Salvar CSV
-corr_df.to_csv("correlacao_taxa_vs_variaveis_V.csv")
-print("\nArquivo salvo: correlacao_taxa_vs_variaveis_V.csv")
+corr_df.to_csv("dataset_correlacao.csv")
 
 # --------------------------------------------------------
 # OPÇÃO 1 — GRÁFICO DE BARRAS
@@ -48,7 +48,7 @@ plt.ylabel("Correlação de Pearson")
 plt.xticks(rotation=90)
 plt.grid(axis="y", linestyle="--", alpha=0.5)
 plt.tight_layout()
-plt.savefig("grafico_barras_correlacao.png", dpi=300)
+plt.savefig("img_grafico_barras_correlacao.png", dpi=300)
 plt.close()
 
 # --------------------------------------------------------
@@ -58,26 +58,9 @@ plt.figure(figsize=(6, 10))
 sns.heatmap(corr_df, annot=True, cmap="coolwarm", vmin=-1, vmax=1, linewidths=.5)
 plt.title("Heatmap da Correlação com Taxa de Incidência")
 plt.tight_layout()
-plt.savefig("heatmap_correlacao.png", dpi=300)
+plt.savefig("img_heatmap_correlacao.png", dpi=300)
 plt.close()
 
 #---------------------------------------------------------
 
-# Criar pasta para salvar os gráficos (opcional)
-os.makedirs("scatter_plots", exist_ok=True)
 
-# Gerar um gráfico de dispersão para cada variável Vxxxx
-for col in variaveis_v:
-    plt.figure(figsize=(7, 5))
-    plt.scatter(df[col], df[alvo], alpha=0.6)
-    
-    plt.title(f"Dispersão entre {col} e {alvo}")
-    plt.xlabel(col)
-    plt.ylabel(alvo)
-    plt.grid(True, linestyle="--", alpha=0.4)
-    
-    # Salvar arquivo
-    plt.savefig(f"scatter_plots/scatter_{col}.png", dpi=300)
-    plt.close()
-
-#---------------------------------------------------------
