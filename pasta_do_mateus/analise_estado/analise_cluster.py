@@ -5,8 +5,9 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster
+from sklearn.decomposition import PCA
 
-os.makedirs("resultados", exist_ok=True)
+os.makedirs("imagens", exist_ok=True)
 
 POR_X_HABITANTES = 100000
 NUM_CLUSTER = 10
@@ -19,7 +20,7 @@ def processar_dataset(caminho, titulo):
     #--------------------------------
 
     # Ignorando as duas primeiras colunas
-    df_dados = df.iloc[:, 7:]
+    df_dados = df.iloc[:, 12:]
 
     # Escolha do número de clusters (você pode ajustar)
     k = NUM_CLUSTER
@@ -92,9 +93,6 @@ def processar_dataset(caminho, titulo):
 
     #--------------------------------
 
-    # Visualização dos clusters com PCA
-    from sklearn.decomposition import PCA
-
     # Reduzindo para 2 dimensões para visualização
     pca = PCA(n_components=2)
     pca_result = pca.fit_transform(df_dados)
@@ -122,7 +120,7 @@ def processar_dataset(caminho, titulo):
     plt.legend(*scatter.legend_elements(), title="Cluster")
 
     # Salvando imagem
-    plt.savefig(f"resultados/img_clusters_pca_visualizacao_{titulo}.png", dpi=300)
+    plt.savefig(f"imagens/img_clusters_pca_visualizacao_{titulo}.png", dpi=300)
     plt.close()
 
     #--------------------------------
@@ -166,7 +164,7 @@ def processar_dataset(caminho, titulo):
     plt.grid(axis="y", linestyle="--", alpha=0.4)
 
     # Salvar em arquivo
-    plt.savefig(f"resultados/img_barras_incidencia_por_cluster_{titulo}.png", dpi=300)
+    plt.savefig(f"imagens/img_barras_incidencia_por_cluster_{titulo}.png", dpi=300)
     plt.close()
 
     #--------------------------------
@@ -186,7 +184,7 @@ def processar_dataset(caminho, titulo):
     plt.xlabel("Municípios")
     plt.ylabel("Distância")
     plt.tight_layout()
-    plt.savefig("resultados/img_dendrograma_cluster_hierarquico.png", dpi=300)
+    plt.savefig("imagens/img_dendrograma_cluster_hierarquico.png", dpi=300)
     plt.close()
 
     df["Cluster_Hierarquico"] = fcluster(Z, k, criterion='maxclust')
@@ -196,7 +194,7 @@ def processar_dataset(caminho, titulo):
     print(df["Cluster_Hierarquico"].value_counts().sort_index())
 
     # 7. Salvar dataset com os clusters
-    df.to_csv("resultados/dataset_m_cluster_hierarquico.csv", index=False)
+    df.to_csv(caminho, index=False)
 
-processar_dataset("dataset_m_dengue_saneamento.csv", "padrao")
-processar_dataset("dataset_m_normalizado.csv", "normalizado")
+processar_dataset("dados_m/dataset_m_dengue_saneamento.csv", "padrao")
+processar_dataset("dados_m/dataset_m_normalizado.csv", "normalizado")
