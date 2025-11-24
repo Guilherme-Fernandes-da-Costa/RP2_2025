@@ -12,7 +12,7 @@ os.makedirs("imagens", exist_ok=True)
 POR_X_HABITANTES = 100000
 NUM_CLUSTER = 10
 
-def processar_dataset(caminho, titulo):
+def processar_dataset(caminho):
 
     # Leitura do dataset
     df = pd.read_csv(caminho)
@@ -84,13 +84,6 @@ def processar_dataset(caminho, titulo):
     ordem_colunas = ["Q1 - Baixa", "Q2 - Moderada", "Q3 - Alta", "Q4 - Muito Alta", "Total"]
     tabela = tabela[ordem_colunas]
 
-    # Ordenar as linhas pelo total (coluna "Total")
-    tabela_ordenada = tabela.sort_values(by="Total", ascending=True)
-
-    # Exibir o resultado
-    print("\nDistribuição de classificações de incidência por cluster (ordenada e com colunas organizadas):")
-    print(tabela_ordenada)
-
     #--------------------------------
 
     # Reduzindo para 2 dimensões para visualização
@@ -111,7 +104,7 @@ def processar_dataset(caminho, titulo):
         alpha=0.8
     )
 
-    plt.title(f"Visualização dos Clusters (PCA 2D) - {titulo}", fontsize=14)
+    plt.title("Visualização dos Clusters (PCA 2D)", fontsize=14)
     plt.xlabel("Componente Principal 1")
     plt.ylabel("Componente Principal 2")
     plt.grid(True)
@@ -120,13 +113,13 @@ def processar_dataset(caminho, titulo):
     plt.legend(*scatter.legend_elements(), title="Cluster")
 
     # Salvando imagem
-    plt.savefig(f"imagens/img_clusters_pca_visualizacao_{titulo}.png", dpi=300)
+    plt.savefig("imagens/img_clusters_pca_visualizacao.png", dpi=300)
     plt.close()
 
     #--------------------------------
 
     # Usando a mesma tabela ordenada (sem linha "Total")
-    tabela_plot = tabela_ordenada[["Q1 - Baixa", "Q2 - Moderada", "Q3 - Alta", "Q4 - Muito Alta"]]
+    tabela_plot = tabela[["Q1 - Baixa", "Q2 - Moderada", "Q3 - Alta", "Q4 - Muito Alta"]]
 
     clusters = tabela_plot.index.tolist()
     categorias = tabela_plot.columns.tolist()
@@ -158,13 +151,13 @@ def processar_dataset(caminho, titulo):
     # Configurações do gráfico
     plt.xlabel("Cluster")
     plt.ylabel("Número de Municípios")
-    plt.title(f"Distribuição de Classificações de Incidência por Cluster - {titulo}")
+    plt.title("Distribuição de Classificações de Incidência por Cluster")
     plt.xticks(x + largura, clusters)
     plt.legend(title="Classificação")
     plt.grid(axis="y", linestyle="--", alpha=0.4)
 
     # Salvar em arquivo
-    plt.savefig(f"imagens/img_barras_incidencia_por_cluster_{titulo}.png", dpi=300)
+    plt.savefig("imagens/img_barras_incidencia_por_cluster.png", dpi=300)
     plt.close()
 
     #--------------------------------
@@ -196,5 +189,4 @@ def processar_dataset(caminho, titulo):
     # 7. Salvar dataset com os clusters
     df.to_csv(caminho, index=False)
 
-processar_dataset("dados_m/dataset_m_dengue_saneamento.csv", "padrao")
-processar_dataset("dados_m/dataset_m_normalizado.csv", "normalizado")
+processar_dataset("dados_m/dataset_m_dengue_saneamento.csv")
